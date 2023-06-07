@@ -1,0 +1,20 @@
+# rest 接口监听地址
+addr: 127.0.0.1:8895
+
+# 数据库配置
+db:
+  type: postgres
+  uri: "host=47.100.210.119 user=fresh password=freshxiaolongxia dbname=fresh"
+
+
+log:
+  level: debug
+  encoding: json
+  outputPaths: ["stdout"]
+  errorOutputPaths: ["stderr"]
+  development: true
+  encoderConfig:
+    messageKey: msg
+    levelKey: level
+    levelEncoder: lowercase
+    stacktraceKey: stack

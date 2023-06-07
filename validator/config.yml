@@ -1,0 +1,6 @@
+validator:
+  rules:
+    test_struct:
+      name: ["required", "alphanum"]
+      size: "range(20|)"
+    test_field_id:
