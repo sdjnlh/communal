@@ -1,10 +1,10 @@
 package web
 
 import (
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/validator"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/validator"
 	"net/http"
 	"strconv"
 )
@@ -74,7 +74,7 @@ func HtmlFail(c *gin.Context, page string, err error) {
 	writeResult(c, nil, err, page)
 }
 
-func writeResult(c *gin.Context, result common.IResult, err error, pages ...string) {
+func writeResult(c *gin.Context, result communal.IResult, err error, pages ...string) {
 	if result != nil && result.IsOk() {
 		c.HTML(http.StatusOK, pages[0], result)
 		return
@@ -118,11 +118,11 @@ func writeResult(c *gin.Context, result common.IResult, err error, pages ...stri
 	}
 }
 
-func (handler *HtmlHandler) Result(c *gin.Context, page string, result common.IResult) {
+func (handler *HtmlHandler) Result(c *gin.Context, page string, result communal.IResult) {
 	writeResult(c, result, nil, page)
 }
 
-func (handler *HtmlHandler) ResultWithError(c *gin.Context, result common.IResult, err error, pages ...string) {
+func (handler *HtmlHandler) ResultWithError(c *gin.Context, result communal.IResult, err error, pages ...string) {
 	writeResult(c, result, err, pages...)
 }
 
@@ -141,7 +141,7 @@ func (handler *HtmlHandler) ValidateInt64Id(c *gin.Context) (id int64, err error
 }
 
 func (handler *HtmlHandler) MustUid(c *gin.Context) (uid int64, ok bool) {
-	uid = c.GetInt64(common.UserIdKey)
+	uid = c.GetInt64(communal.UserIdKey)
 	if uid <= 0 {
 		handler.Unauthorized(c, "", nil)
 		return uid, false

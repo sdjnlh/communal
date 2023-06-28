@@ -1,9 +1,9 @@
 package log
 
 import (
-	"code.letsit.cn/go/common/config"
 	"encoding/json"
 	"fmt"
+	"github.com/sdjnlh/communal/config"
 	"go.uber.org/zap"
 	"log"
 	"sync"

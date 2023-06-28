@@ -7,20 +7,20 @@ import (
 	"strconv"
 	"strings"
 
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/log"
-	"code.letsit.cn/go/common/util"
-	"code.letsit.cn/go/common/validator"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/log"
+	"github.com/sdjnlh/communal/util"
+	"github.com/sdjnlh/communal/validator"
 	"go.uber.org/zap"
 	"xorm.io/xorm"
 )
 
 type DomainCreator func(c *gin.Context) (interface{}, error)
-type IdDomainCreator func(c *gin.Context) (common.IdInf, error)
-type FilterCreator func(c *gin.Context) (common.Filter, error)
+type IdDomainCreator func(c *gin.Context) (communal.IdInf, error)
+type FilterCreator func(c *gin.Context) (communal.Filter, error)
 
 type EndpointType int8
 
@@ -32,7 +32,7 @@ type IEndPoint interface {
 }
 
 type Endpoint struct {
-	Module       *common.Module
+	Module       *communal.Module
 	Type         EndpointType
 	HttpMethod   string
 	RpcMethod    string
@@ -78,7 +78,7 @@ func (ep *Endpoint) AdminRightCheck() *Endpoint {
 }
 
 func (ep *Endpoint) hasRight(c *gin.Context) bool {
-	rights := c.GetStringMap(common.UserRightKey)
+	rights := c.GetStringMap(communal.UserRightKey)
 
 	if rights == nil && rights[ep.RightKey] == nil {
 		return false
@@ -289,7 +289,7 @@ func (ep *Get) Do(c *gin.Context) {
 	}
 
 	//domain := rest.Domain.Domain()
-	result := &common.Result{
+	result := &communal.Result{
 		Error: &errors.SimpleBizError{},
 	}
 	result.Data, err = ep.DomainCreator(c)
@@ -348,7 +348,7 @@ func (ep *Create) Do(c *gin.Context) {
 	}
 	var err error
 
-	result := &common.Result{
+	result := &communal.Result{
 		Error: &errors.SimpleBizError{},
 	}
 	result.Data, err = ep.DomainCreator(c)
@@ -411,7 +411,7 @@ func (ep *Update) Do(c *gin.Context) {
 	}
 	var err error
 
-	result := &common.Result{
+	result := &communal.Result{
 		Error: &errors.SimpleBizError{},
 	}
 	dm, err := ep.DomainCreator(c)
@@ -486,9 +486,9 @@ func (ep *List) Do(c *gin.Context) {
 		return
 	}
 
-	var result = &common.FilterResult{
-		Page: &common.Page{},
-		Result: common.Result{
+	var result = &communal.FilterResult{
+		Page: &communal.Page{},
+		Result: communal.Result{
 			Error: &errors.SimpleBizError{},
 		},
 	}
@@ -548,7 +548,7 @@ func (ep *Delete) Do(c *gin.Context) {
 		return
 	}
 
-	var result = &common.Result{
+	var result = &communal.Result{
 		Error: &errors.SimpleBizError{},
 	}
 	if ep.Module.RpcOn {
@@ -578,8 +578,8 @@ func (ep *Delete) Do(c *gin.Context) {
 type CrudDomainFactory interface {
 	Get(c *gin.Context) (interface{}, error)
 	Create(c *gin.Context) (interface{}, error)
-	Update(c *gin.Context) (common.IdInf, error)
-	Filter(c *gin.Context) (common.Filter, error)
+	Update(c *gin.Context) (communal.IdInf, error)
+	Filter(c *gin.Context) (communal.Filter, error)
 	List(c *gin.Context) (interface{}, error)
 }
 
@@ -589,19 +589,19 @@ const (
 )
 
 type EndpointBuilder struct {
-	Module       *common.Module
+	Module       *communal.Module
 	endpointType EndpointType
 	endPoints    map[string]IEndPoint
 }
 
 func NewEndpointBuilder(moduleName string, tableName string, routePrefix string) *EndpointBuilder {
 	return &EndpointBuilder{
-		Module:    common.NewModule(moduleName, tableName, routePrefix),
+		Module:    communal.NewModule(moduleName, tableName, routePrefix),
 		endPoints: map[string]IEndPoint{},
 	}
 }
 
-func NewEndpointBuilderModule(module *common.Module) *EndpointBuilder {
+func NewEndpointBuilderModule(module *communal.Module) *EndpointBuilder {
 	return &EndpointBuilder{
 		Module:    module,
 		endPoints: map[string]IEndPoint{},
@@ -779,7 +779,7 @@ func (builder *EndpointBuilder) RegisterAll(router gin.IRouter, handlers ...gin.
 }
 
 func EnsureUid(c *gin.Context, uid *int64) error {
-	*uid = c.GetInt64(common.UserIdKey)
+	*uid = c.GetInt64(communal.UserIdKey)
 	if *uid <= 0 {
 		return errors.Unauthorized()
 	}

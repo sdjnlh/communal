@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strings"
 
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/app"
-	"code.letsit.cn/go/common/log"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/app"
+	"github.com/sdjnlh/communal/log"
 	"go.uber.org/zap"
 )
 
@@ -61,9 +61,9 @@ type CorsConfig struct {
 var cc CorsConfig
 
 var UserInterceptor = func(c *gin.Context) {
-	v, ok := c.Get(common.UserKey)
+	v, ok := c.Get(communal.UserKey)
 	if ok {
-		if v.(common.IdInf).GetId() > 0 {
+		if v.(communal.IdInf).GetId() > 0 {
 			c.Next()
 			return
 		}

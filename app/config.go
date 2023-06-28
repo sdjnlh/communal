@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"code.letsit.cn/go/common"
+	"github.com/sdjnlh/communal"
 
 	"github.com/spf13/viper"
 )
@@ -20,7 +20,7 @@ type ConfigLoader struct {
 	Config         *viper.Viper
 }
 
-func (cs *ConfigLoader) Start(ctx common.Context) error {
+func (cs *ConfigLoader) Start(ctx communal.Context) error {
 	return LoadConfig(cs.ConfigFileName, cs.Config)
 }
 

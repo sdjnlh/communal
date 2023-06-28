@@ -1,13 +1,13 @@
 package web
 
 import (
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/log"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/log"
 	"strconv"
 
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/validator"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/validator"
 )
 
 type Handler struct {
@@ -18,15 +18,15 @@ func (handler *Handler) Register(router *gin.Engine) {
 }
 
 func (handler *Handler) UID(c *gin.Context) int64 {
-	user, ok := c.Get(common.UserKey)
+	user, ok := c.Get(communal.UserKey)
 	if !ok || user == nil {
 		return 0
 	}
-	return user.(common.IdInf).GetId()
+	return user.(communal.IdInf).GetId()
 }
 
 func (handler *Handler) User(c *gin.Context) interface{} {
-	user, _ := c.Get(common.UserKey)
+	user, _ := c.Get(communal.UserKey)
 	return user
 }
 

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/config"
 	"github.com/go-redis/redis/v8"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/config"
 	"github.com/spf13/viper"
 	"xorm.io/xorm"
 )
@@ -27,7 +27,7 @@ type BaseApp struct {
 	isMaster bool
 
 	Rpc     bool
-	modules []common.IModule
+	modules []communal.IModule
 	DB      *xorm.Engine
 	Redis   *redis.Client
 }
@@ -69,7 +69,7 @@ func (app *BaseApp) Name() string {
 	return app.name
 }
 
-func (app *BaseApp) Register(modules ...common.IModule) {
+func (app *BaseApp) Register(modules ...communal.IModule) {
 	app.modules = append(app.modules, modules...)
 }
 
@@ -77,7 +77,7 @@ func (app *BaseApp) SetRedisConnection(client *redis.Client) {
 	app.Redis = client
 }
 
-func (app *BaseApp) Start(ctx *common.Context) error {
+func (app *BaseApp) Start(ctx *communal.Context) error {
 	//app.Configurator.BaseStarter = *(NewBaseStarter(app.name+"_config", PriorityHigh))
 	(&app.Configurator).SetApp(app)
 	//RegisterStarter(&app.Configurator)
@@ -153,7 +153,7 @@ func (configurator *Configurator) Subscribe(key string, target interface{}) {
 *	a, error if not exist
 *	b,
  */
-func (configurator *Configurator) Start(ctx *common.Context) error {
+func (configurator *Configurator) Start(ctx *communal.Context) error {
 	fileName := configurator.FileName
 	if fileName == "" {
 		fileName = configurator.app.Name()

@@ -1,7 +1,7 @@
 package app
 
 import (
-	"code.letsit.cn/go/common"
+	"github.com/sdjnlh/communal"
 )
 
 type Service struct {
@@ -18,7 +18,7 @@ func NewService(name string) *Service {
 	return service
 }
 
-func (app *Service) Start(ctx *common.Context) error {
+func (app *Service) Start(ctx *communal.Context) error {
 	app.Subscribe(app.name, app)
 
 	err := (&app.BaseApp).Start(ctx)

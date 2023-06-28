@@ -5,14 +5,14 @@ import (
 	be "errors"
 	"net/http"
 
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/log"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	redisDriver "github.com/gomodule/redigo/redis"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/log"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -77,7 +77,7 @@ type StateManagerStarter struct {
 	StateManagerHolder **StateManager
 }
 
-func (starter *StateManagerStarter) Start(ctx *common.Context) error {
+func (starter *StateManagerStarter) Start(ctx *communal.Context) error {
 	log.Logger.Debug("start state manager")
 	cfg := ctx.MustGet(starter.Namespace + ".config").(*viper.Viper)
 
@@ -101,7 +101,7 @@ func (starter *StateManagerStarter) Start(ctx *common.Context) error {
 	return nil
 }
 
-func NewStateManager(config *viper.Viper, ctx *common.Context) (manager *StateManager, err error) {
+func NewStateManager(config *viper.Viper, ctx *communal.Context) (manager *StateManager, err error) {
 	tp := config.GetString("type")
 
 	var store StateStore
@@ -301,7 +301,7 @@ type SessionStore struct {
 	realStore sessions.Store
 }
 
-func newSessionStore(opt SessionOptions, ctx *common.Context) (store *SessionStore, err error) {
+func newSessionStore(opt SessionOptions, ctx *communal.Context) (store *SessionStore, err error) {
 	store = &SessionStore{Options: opt}
 	var realStore sessions.Store
 
@@ -339,7 +339,7 @@ func (ss *SessionStore) Use(engine *gin.Engine) {
 
 func (ss *SessionStore) ParseUser(c *gin.Context) {
 	session := sessions.Default(c)
-	userStr := session.Get(common.UserKey)
+	userStr := session.Get(communal.UserKey)
 	if userStr != nil {
 		userFields := map[string]interface{}{}
 		err := json.Unmarshal(([]byte)(userStr.(string)), &userFields)
@@ -362,7 +362,7 @@ func (ss *SessionStore) SetUser(c *gin.Context, user map[string]interface{}) err
 	if err != nil {
 		return err
 	}
-	sess.Set(common.UserKey, string(bts))
+	sess.Set(communal.UserKey, string(bts))
 
 	return sess.Save()
 }

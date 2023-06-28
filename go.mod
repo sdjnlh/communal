@@ -1,4 +1,4 @@
-module code.letsit.cn/go/common
+module github.com/sdjnlh/communal
 
 replace (
 	github.com/spf13/viper => github.com/topiot/viper v1.7.1-0.20200721234125-12c3cd96c819

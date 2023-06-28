@@ -1,11 +1,11 @@
 package app
 
 import (
-	"code.letsit.cn/go/common"
 	"encoding/json"
 	"fmt"
+	"github.com/sdjnlh/communal"
 
-	"code.letsit.cn/go/common/log"
+	"github.com/sdjnlh/communal/log"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -19,7 +19,7 @@ type LogStarter struct {
 	*BaseStarter
 }
 
-func (starter *LogStarter) Start(ctx *common.Context) error {
+func (starter *LogStarter) Start(ctx *communal.Context) error {
 	var logConfig zap.Config
 	var conf *viper.Viper = viper.New()
 	var err error

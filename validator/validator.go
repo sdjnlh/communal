@@ -1,14 +1,14 @@
 package validator
 
 import (
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/log"
-	"gopkg.in/go-playground/validator.v8"
-	"reflect"
-	"code.letsit.cn/go/common/validator/rule"
 	be "errors"
 	"fmt"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/log"
+	"github.com/sdjnlh/communal/validator/rule"
 	"go.uber.org/zap"
+	"gopkg.in/go-playground/validator.v8"
+	"reflect"
 	//"go.uber.org/zap"
 	"strings"
 	"unicode"

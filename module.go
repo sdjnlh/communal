@@ -1,12 +1,12 @@
-package common
+package communal
 
 import (
 	"context"
 	"reflect"
 	"time"
 
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/log"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/log"
 	"go.uber.org/zap"
 	"xorm.io/xorm"
 )

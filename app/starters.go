@@ -4,9 +4,9 @@ import (
 	"errors"
 	"html/template"
 
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/log"
 	"github.com/go-redis/redis/v8"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/log"
 	"github.com/spf13/viper"
 	"xorm.io/xorm"
 )
@@ -19,14 +19,14 @@ type DbStarter struct {
 	BaseStarter
 	Namespace string
 	DbHolder  DbHolder
-	listeners map[string][]common.DBListener
+	listeners map[string][]communal.DBListener
 }
 
-var dbListeners map[string][]common.DBListener
+var dbListeners map[string][]communal.DBListener
 
-func ListenDB(listeners ...common.DBListener) {
+func ListenDB(listeners ...communal.DBListener) {
 	if dbListeners == nil {
-		dbListeners = map[string][]common.DBListener{}
+		dbListeners = map[string][]communal.DBListener{}
 	}
 
 	for _, listener := range listeners {
@@ -36,7 +36,7 @@ func ListenDB(listeners ...common.DBListener) {
 	}
 }
 
-func (starter *DbStarter) Start(ctx *common.Context) error {
+func (starter *DbStarter) Start(ctx *communal.Context) error {
 	cfg := ctx.MustGet(starter.Namespace + ".config").(*viper.Viper)
 
 	dbns := cfg.GetStringMap("db")
@@ -78,7 +78,7 @@ type RedisStarter struct {
 	RedisHolder RedisHolder
 }
 
-func (starter *RedisStarter) Start(ctx *common.Context) error {
+func (starter *RedisStarter) Start(ctx *communal.Context) error {
 	cfg := ctx.MustGet(starter.Namespace + ".config").(*viper.Viper)
 
 	dbn := cfg.GetString(starter.Namespace + ".redis")

@@ -1,10 +1,10 @@
 package rule
 
 import (
-	//"go.uber.org/zap"
-	"code.letsit.cn/go/common/errors"
 	be "errors"
-	//. "code.letsit.cn/go/common/log"
+	//"go.uber.org/zap"
+	"github.com/sdjnlh/communal/errors"
+	//. "github.com/sdjnlh/communal/log"
 	"reflect"
 	"strconv"
 )

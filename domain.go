@@ -1,4 +1,4 @@
-package common
+package communal
 
 import (
 	"bytes"
@@ -10,10 +10,10 @@ import (
 
 	"github.com/go-xorm/builder"
 
-	"code.letsit.cn/go/common/db"
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/id"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal/db"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/id"
 	"xorm.io/xorm"
 )
 

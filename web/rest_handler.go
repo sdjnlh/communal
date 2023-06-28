@@ -1,11 +1,11 @@
 package web
 
 import (
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/errors"
-	"code.letsit.cn/go/common/log"
-	"code.letsit.cn/go/common/validator"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/errors"
+	"github.com/sdjnlh/communal/log"
+	"github.com/sdjnlh/communal/validator"
 	"go.uber.org/zap"
 	"net/http"
 	"strconv"
@@ -76,7 +76,7 @@ func (handler *RestHandler) NotFound(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
-func (handler *RestHandler) ResultWithError(c *gin.Context, result common.IResult, err error) {
+func (handler *RestHandler) ResultWithError(c *gin.Context, result communal.IResult, err error) {
 	if err != nil {
 		log.Logger.Warn("api fail", zap.Error(err))
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -85,7 +85,7 @@ func (handler *RestHandler) ResultWithError(c *gin.Context, result common.IResul
 	}
 }
 
-func (handler *RestHandler) Result(c *gin.Context, result common.IResult) {
+func (handler *RestHandler) Result(c *gin.Context, result communal.IResult) {
 	if result == nil {
 		c.AbortWithStatus(http.StatusOK)
 		return
@@ -129,7 +129,7 @@ func ApiFail(c *gin.Context, err error) {
 			return
 		}
 	}
-	c.AbortWithStatusJSON(http.StatusInternalServerError, &common.Result{Ok: false, Error: errors.ServerErrorWithMsg(err.Error())})
+	c.AbortWithStatusJSON(http.StatusInternalServerError, &communal.Result{Ok: false, Error: errors.ServerErrorWithMsg(err.Error())})
 }
 
 func (handler *RestHandler) ValidateInt64Id(c *gin.Context) (id int64, err error) {

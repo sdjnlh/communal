@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"sync"
 
-	"code.letsit.cn/go/common"
+	"github.com/sdjnlh/communal"
 )
 
 const (
@@ -24,7 +24,7 @@ type Starter interface {
 	SetAppName(appName string) Starter
 	SetApp(app App) Starter
 	AppName() string
-	Start(ctx *common.Context) error
+	Start(ctx *communal.Context) error
 	Started() bool
 	SetStarted(bool) Starter
 }
@@ -35,7 +35,7 @@ type BaseStarter struct {
 	started  bool
 	appName  string
 	app      App
-	action   func(ctx *common.Context) error
+	action   func(ctx *communal.Context) error
 }
 
 func NewBaseStarter(name string, priority int) *BaseStarter {
@@ -81,12 +81,12 @@ func (base *BaseStarter) SetApp(app App) Starter {
 	return base
 }
 
-func (base *BaseStarter) Action(action func(ctx *common.Context) error) Starter {
+func (base *BaseStarter) Action(action func(ctx *communal.Context) error) Starter {
 	base.action = action
 	return base
 }
 
-func (base *BaseStarter) Start(ctx *common.Context) error {
+func (base *BaseStarter) Start(ctx *communal.Context) error {
 	if base.action != nil {
 		return base.action(ctx)
 	}
@@ -104,13 +104,13 @@ func RegisterStarter(starter Starter) {
 }
 
 func Start() error {
-	controller.ctx = common.Context{}
+	controller.ctx = communal.Context{}
 	err := controller.startNext()
 	controller = nil
 	return err
 }
 
-type StartListener func(ctx common.Context) error
+type StartListener func(ctx communal.Context) error
 
 func OnStarted(starterName string, listener StartListener) {
 	if controller.listenersMap == nil {
@@ -122,7 +122,7 @@ func OnStarted(starterName string, listener StartListener) {
 func init() {}
 
 type StartController struct {
-	ctx           common.Context
+	ctx           communal.Context
 	mu            sync.RWMutex
 	startersMap   map[string]Starter
 	startersArray []Starter

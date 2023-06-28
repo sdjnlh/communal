@@ -1,9 +1,9 @@
 package app
 
 import (
-	"code.letsit.cn/go/common"
-	"code.letsit.cn/go/common/log"
 	"github.com/gin-gonic/gin"
+	"github.com/sdjnlh/communal"
+	"github.com/sdjnlh/communal/log"
 	"go.uber.org/zap"
 	"html/template"
 	"net/http"
@@ -32,7 +32,7 @@ func NewWeb(name string) *Web {
 	return web
 }
 
-func (app *Web) Start(cxt *common.Context) error {
+func (app *Web) Start(cxt *communal.Context) error {
 	app.Subscribe(app.name, app)
 	err := (&app.BaseApp).Start(cxt)
 	if err != nil {
@@ -61,13 +61,13 @@ func (app *Web) Start(cxt *common.Context) error {
 }
 
 func (web *Web) HtmlUserInterceptor(c *gin.Context) {
-	log.Logger.Debug("HTML User Interceptor: check user id in context", zap.Int64("id", c.GetInt64(common.UserIdKey)))
-	if c.GetInt64(common.UserIdKey) <= 0 {
+	log.Logger.Debug("HTML User Interceptor: check user id in context", zap.Int64("id", c.GetInt64(communal.UserIdKey)))
+	if c.GetInt64(communal.UserIdKey) <= 0 {
 		c.Redirect(http.StatusTemporaryRedirect, web.LoginUrl)
 		return
 	}
 
-	log.Logger.Debug("user has login", zap.Int64("id", c.GetInt64(common.UserIdKey)))
+	log.Logger.Debug("user has login", zap.Int64("id", c.GetInt64(communal.UserIdKey)))
 	c.Next()
 }
 

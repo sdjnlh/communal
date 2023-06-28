@@ -1,9 +1,9 @@
 package sender
 
 import (
-	"code.letsit.cn/go/common/log"
 	"encoding/json"
 	"fmt"
+	"github.com/sdjnlh/communal/log"
 	"go.uber.org/zap"
 	"io/ioutil"
 	"math/rand"

@@ -2,10 +2,10 @@ package rule
 
 import (
 	"github.com/asaskevich/govalidator"
-	"code.letsit.cn/go/common/errors"
+	"github.com/sdjnlh/communal/errors"
 	//"go.uber.org/zap"
-	"code.letsit.cn/go/common/util"
-	//. "code.letsit.cn/go/common/log"
+	"github.com/sdjnlh/communal/util"
+	//. "github.com/sdjnlh/communal/log"
 )
 
 type StringRule struct {

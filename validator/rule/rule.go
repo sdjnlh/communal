@@ -1,11 +1,11 @@
 package rule
 
 import (
+	be "errors"
 	"github.com/asaskevich/govalidator"
 	//"go.uber.org/zap"
-	"code.letsit.cn/go/common/errors"
-	be "errors"
-	//. "code.letsit.cn/go/common/log"
+	"github.com/sdjnlh/communal/errors"
+	//. "github.com/sdjnlh/communal/log"
 	"strings"
 )
 
