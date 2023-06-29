@@ -3,11 +3,13 @@ package app
 import (
 	"errors"
 	"html/template"
+	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/gomodule/redigo/redis"
 	"github.com/sdjnlh/communal"
 	"github.com/sdjnlh/communal/log"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"xorm.io/xorm"
 )
 
@@ -69,7 +71,7 @@ func (starter *DbStarter) Start(ctx *communal.Context) error {
 }
 
 type RedisHolder interface {
-	SetRedisConnection(*redis.Client)
+	SetRedisConnection(*redis.Pool)
 }
 
 type RedisStarter struct {
@@ -86,7 +88,7 @@ func (starter *RedisStarter) Start(ctx *communal.Context) error {
 		return nil
 	}
 
-	var conn *redis.Client
+	var conn *redis.Pool
 	var err error
 	if ctx.Get("redis."+dbn) == nil {
 		conn, err = BuildRedisConnection(cfg.Sub("redis." + dbn))
@@ -95,7 +97,7 @@ func (starter *RedisStarter) Start(ctx *communal.Context) error {
 		}
 		ctx.Set("redis."+dbn, conn)
 	} else {
-		conn = ctx.Get("redis." + dbn).(*redis.Client)
+		conn = ctx.Get("redis." + dbn).(*redis.Pool)
 	}
 
 	starter.RedisHolder.SetRedisConnection(conn)
@@ -144,28 +146,47 @@ func BuildDBConnection(config *viper.Viper) (*xorm.Engine, error) {
 	return engine, err
 }
 
-// type redisConfig struct {
-// 	MaxIdle     int
-// 	IdleTimeout int
-// 	Server      string
-// 	Auth        bool
-// 	Password    string
-// }
-
 type redisConfig struct {
-	redis.Options `mapstructure:",squash"`
+	MaxIdle     int
+	IdleTimeout int
+	Server      string
+	Auth        bool
+	Password    string
 }
 
-func BuildRedisConnection(config *viper.Viper) (*redis.Client, error) {
+func BuildRedisConnection(config *viper.Viper) (*redis.Pool, error) {
 	if config == nil {
-		return nil, errors.New("nil config when build redis connection")
+		return nil, errors.New("Nil config when build redis connection")
 	}
 	conf := redisConfig{}
 	err := config.Unmarshal(&conf)
 	if err != nil {
 		return nil, err
 	}
-	return redis.NewClient(&conf.Options), nil
+
+	log.Logger.Debug("redis", zap.Any("config", conf))
+	return &redis.Pool{
+		MaxIdle:     conf.MaxIdle,
+		IdleTimeout: time.Second * time.Duration(conf.IdleTimeout),
+		Dial: func() (redis.Conn, error) {
+			c, err := redis.Dial("tcp", conf.Server)
+			if err != nil {
+				return nil, err
+			}
+
+			if conf.Auth {
+				if _, err := c.Do("AUTH", conf.Password); err != nil {
+					_ = c.Close()
+					return nil, err
+				}
+			}
+			return c, err
+		},
+		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+			_, err := c.Do("PING")
+			return err
+		},
+	}, nil
 }
 
 type HtmlTemplateStarter struct {

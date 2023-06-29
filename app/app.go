@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/gomodule/redigo/redis"
 	"github.com/sdjnlh/communal"
 	"github.com/sdjnlh/communal/config"
 	"github.com/spf13/viper"
@@ -29,7 +29,7 @@ type BaseApp struct {
 	Rpc     bool
 	modules []communal.IModule
 	DB      *xorm.Engine
-	Redis   *redis.Client
+	Redis   *redis.Pool
 }
 
 func (app *BaseApp) SetMaster(master App) {
@@ -73,8 +73,8 @@ func (app *BaseApp) Register(modules ...communal.IModule) {
 	app.modules = append(app.modules, modules...)
 }
 
-func (app *BaseApp) SetRedisConnection(client *redis.Client) {
-	app.Redis = client
+func (app *BaseApp) SetRedisConnection(conn *redis.Pool) {
+	app.Redis = conn
 }
 
 func (app *BaseApp) Start(ctx *communal.Context) error {
